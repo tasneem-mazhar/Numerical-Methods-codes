@@ -1,0 +1,43 @@
+clc, clear all
+% For fixed x,y
+
+n = 3
+x = [ 1, 2, 3];
+y = [6,18,42];
+a = y;
+
+
+for i = 1:n-1
+        h(i) = x(i+1) - x(i);
+end
+
+for i = 2:n-1
+     alph(i) = 3*( (a(i+1) - a(i))/h(i) - (a(i) - a(i-1))/h(i-1) );
+end
+
+l = zeros(1,n);
+mu = zeros(1,n);
+zed = zeros(1,n);
+c = zeros(1,n);
+
+for i = 2:n-1
+        l(i) = 2*(x(i+1) - x(i-1)) - (h(i-1)*mu(i-1));
+        mu(i) = h(i)/l(i);
+        zed(i) = (alph(i)- h(i-1)*zed(i-1))/l(i);
+end
+
+l(n) = 1;
+zed(n) = 0;
+c(n) = 0;
+
+for j = n-1:-1:1
+    c(j) = zed(j) - mu(j)*c(j+1);
+   b(j) = (a(j+1) - a(j))/h(j) - h(j)*(c(j+1) + 2*c(j))/3;
+    d(j) = ( c(j+1) - c(j) )/( 3*h(j) );
+
+end
+
+disp('a ='); disp(a)
+disp('b ='); disp(b)
+disp('c ='); disp(c)
+disp('d ='); disp(d)
