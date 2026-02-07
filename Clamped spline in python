@@ -1,0 +1,54 @@
+import numpy as np
+
+
+x = np.array([1,2,3], dtype=float)
+a = np.array([2,3,5], dtype=float)
+fpo = 2
+fpn = 1
+n = len(x) - 1
+
+
+h = np.zeros(n)
+
+for i in range(n):
+  h[i] = x[i+1] - x[i]
+
+alph = np.zeros(n+1)
+
+alph[0] = 3 * ( a[1] - a[0] ) / h[0] - 3*fpo
+alph[n] = 3*fpn - 3 * ( a[n] - a[n-1] ) / h[n-1]
+
+for i in range(1,n):
+  alph[i] = 3 * ( a[i+1] - a[i] )/h[i] - 3 * ( a[i] - a[i-1])/h[i-1]
+
+l = np.zeros(n+1)
+mu = np.zeros(n+1)
+zed = np.zeros(n+1)
+c = np.zeros(n+1)
+b = np.zeros(n)
+d = np.zeros(n)
+
+l[0] = 2 * h[0]
+mu[0] = 0.5
+zed[0] = alph[0]/l[0]
+
+for i in range(1,n):
+  l[i] = 2*( x[i+1] - x[i-1] ) - h[i-1]*mu[i-1]
+  mu[i]  = h[i]/l[i]
+  zed[i] = (alph[i] - h[i-1]*zed[i-1])/l[i]
+
+l[n] = h[n-1]*( 2 - mu[n-1])
+zed[n] = (alph[n] - h[n-1]*zed[n-1])/l[n]
+c[n] = zed[n]
+
+for i in range(n-1,-1,-1):
+  c[i] = zed[i] - mu[i]*c[i+1]
+  b[i] = ( a[i+1] - a[i] )/h[i] - h[i]*( c[i+1] +2*c[i])/3
+  d[i] = (c[i+1] - c[i])/(3*h[i])
+
+print("a =", a)
+print("b =", b)
+print("c =", c)
+print("d =", d)
+
+
